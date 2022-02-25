@@ -1,0 +1,7 @@
+Show all articles:
+
+
+{% for article in articles %}
+    <a href="articles/{{ loop.index }}">{{ article.title }}</a>
+
+{% endfor %}
