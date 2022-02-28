@@ -91,6 +91,7 @@ class ArticlesController extends Database
 
         Database::connection()
             ->insert('articles', [
+                'user_id' => $_SESSION['userid'],
                 'title' => $_POST['title'],
                 'description' => $_POST['description'],
             ]);

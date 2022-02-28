@@ -10,7 +10,7 @@
 <p>
     <small>Written by {{ author.name }} {{ author.surname}}</small>
 </p>
-{% if session.userid is defined %}
+{% if session.userid is defined and session.userid == author.id %}
     (<small><a href="/articles/{{ article.id }}/edit">Edit</a></small>)
 {% endif %}
 <p>{{ article.description }}</p>
