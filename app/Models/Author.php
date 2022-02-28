@@ -5,9 +5,9 @@ class Author
 {
     private string $name;
     private string $surname;
-    private int $id;
+    private ?int $id;
 
-    public function __construct(string $name, string $surname, int $id)
+    public function __construct(string $name, string $surname, ?int $id = null)
     {
         $this->name = $name;
         $this->surname = $surname;

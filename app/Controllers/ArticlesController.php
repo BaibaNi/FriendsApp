@@ -22,26 +22,26 @@ class ArticlesController extends Database
             ->prepare('SELECT * FROM articles order by created_at desc');
         $articlesList = $stmt->executeQuery()->fetchAllAssociative();
 
-//        $stmt2 = Database::connection()
-//            ->prepare('SELECT users.id, user_profiles.name, user_profiles.surname FROM users JOIN user_profiles ON
-//    (users.id = user_profiles.user_id) where user_id = ?');
-//        $authorsList = $stmt2->executeQuery()->fetchAssociative();
-
-
         $articles = [];
-//        $authors = [];
         foreach ($articlesList as $item){
             $articles[] = new Article($item['title'], $item['description'], $item['created_at'], $item['id'], $item['user_id']);
         }
-//        foreach ($authorsList as $item){
-//            $authors[] = new Article($item['name'], $item['surname'], $item['id']);
-//        }
+
+        $stmt2 = Database::connection()
+            ->prepare('SELECT users.id, user_profiles.name, user_profiles.surname FROM users JOIN user_profiles ON
+    (users.id = user_profiles.user_id)');
+
+        $authorsList = $stmt2->executeQuery()->fetchAllAssociative();
 
 
+        $authors = [];
+        foreach ($authorsList as $item2){
+            $authors[] = new Author($item2['name'], $item2['surname'], (int)$item2['id']);
+        }
 
         return new View('Articles/index', [
                 'articles' => $articles,
-//                'authors' => $authors
+                'authors' => $authors
             ]
         );
 
@@ -69,7 +69,6 @@ class ArticlesController extends Database
         $list2 = $stmt2->executeQuery()->fetchAssociative();
 
         $author = new Author($list2['name'], $list2['surname'], $list2['id']);
-var_dump($author);
 
         return new View('Articles/show', [
             'article' => $article,

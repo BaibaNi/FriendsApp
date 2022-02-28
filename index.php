@@ -1,5 +1,5 @@
 <?php
-echo '<pre>';
+//echo '<pre>';
 
 require_once 'vendor/autoload.php';
 

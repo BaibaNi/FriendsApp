@@ -8,7 +8,7 @@
 
 <h1>{{ article.title }}</h1>
 <p>
-    <small>Written by {{ article.userId }}</small>
+    <small>Written by {{ author.name }} {{ author.surname}}</small>
 </p>
 {% if session.userid is defined %}
     (<small><a href="/articles/{{ article.id }}/edit">Edit</a></small>)
