@@ -1,31 +1,35 @@
-<a href="/users">Back</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p><a href="/">Back</a></p>
 
 <form method="post" action="/users">
 
     <div>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name"/>
+        <input type="text" id="name" name="name" class="input_box"/>
     </div>
     <div>
         <label for="surname">Surname:</label>
-        <input type="text" id="surname" name="surname"/>
+        <input type="text" id="surname" name="surname" class="input_box"/>
     </div>
     <div>
         <label for="birthday">Birthday:</label>
-        <input type="date" id="birthday" name="birthday"/>
+        <input type="date" id="birthday" name="birthday" class="input_box"/>
     </div>
     <div>
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email"/>
+        <input type="text" id="email" name="email" class="input_box"/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="text" id="password" name="password"/>
+        <input type="text" id="password" name="password" class="input_box"/>
     </div>
 
 
     <div>
-        <button type="submit">Register</button>
+        <button type="submit" class="button_box">Register</button>
     </div>
 
 </form>
+
+{% endapply %}

@@ -1,16 +1,20 @@
+{% apply inline_css(source("formatting.css")) %}
+
 <a href="/">Back</a>
 
 <form method="post" action="/users/welcome">
     <div>
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required/>
+        <input type="text" id="email" name="email" required class="input_box"/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="text" id="password" name="password" required/>
+        <input type="text" id="password" name="password" required class="input_box"/>
     </div>
     <div>
-        <button type="submit">Log in</button>
+        <button type="submit" class="button_box">Log in</button>
     </div>
 
 </form>
+
+{% endapply %}

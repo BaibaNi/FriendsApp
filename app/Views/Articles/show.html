@@ -1,19 +1,22 @@
-<a href="/articles">Back</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p><a href="/articles">Back</a></p>
 
 {% if session.userid is defined %}
     <form method="post" action="/">
-        <button type="submit">Log out</button>
+        <button type="submit" class="button_box">Log out</button>
     </form>
 {% endif %}
 
 <h1>{{ article.title }}</h1>
-<p>
-    <small>Written by {{ author.name }} {{ author.surname}}</small>
-</p>
+
+<p class="written_by">Written by {{ author.name }} {{ author.surname}}</p>
+
 {% if session.userid is defined and session.userid == author.id %}
-    (<small><a href="/articles/{{ article.id }}/edit">Edit</a></small>)
+    <p><a href="/articles/{{ article.id }}/edit">Edit</a></p>
 {% endif %}
+
 <p>{{ article.description }}</p>
-<p>
-    <small>[{{ article.createdAt|date('d-m-Y') }}]</small>
-</p>
+<p class="small_date">Article created: {{ article.createdAt|date('d-m-Y') }}</p>
+
+{% endapply %}

@@ -1,0 +1,58 @@
+p{
+    font-family: Trebuchet MS, sans-serif;
+}
+
+.written_by{
+    font-size: x-small;
+    color: lightslategray;
+    line-height: 4px;
+}
+
+.small_date{
+    font-size: x-small;
+    line-height: 4px;
+}
+
+h1{
+    font-family: Trebuchet MS, sans-serif;
+    color: darkslateblue;
+}
+
+body{
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 12px;
+    color: darkslateblue;
+    background-color: lightyellow;
+}
+
+.back_link{
+    margin: 2% auto;
+    padding: 3px;
+    background-color: darkseagreen;
+
+}
+
+div.one_line{
+    line-height: 6px;
+}
+
+.input_box{
+    font-family: Trebuchet MS, sans-serif;
+    font-size: small;
+    color: rebeccapurple;
+    padding: 3px;
+    margin: 0 2% 1% 2%;
+    border-radius: 6px;
+    border: solid darkseagreen 1px;
+}
+
+.button_box{
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 10px;
+    color: darkslateblue;
+    padding: 3px;
+    margin: 0;
+    border-radius: 6px;
+    border: solid darkseagreen 1px;
+    background-color: darkseagreen;
+}

@@ -1,12 +1,17 @@
-<a href="/">Main page</a>
-<a href="/articles">Articles</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p>
+    <a href="/">Main page</a> |
+    <a href="/articles">Articles</a>
+</p>
+
 <form method="post" action="/">
-    <button type="submit">Log out</button>
+    <button type="submit" class="button_box">Log out</button>
 </form>
 
 <h1>WELCOME! {{ user.name }} {{ user.surname }}</h1>
 <p>Birthday: {{ user.birthday }}</p>
 <p>Email: {{ user.email }}</p>
-<p>
-    <small>Profile created: {{ user.createdAt|date('d-m-Y') }}</small>
-</p>
+<p class="small_date">Profile created: {{ user.createdAt|date('d-m-Y') }}</p>
+
+{% endapply %}

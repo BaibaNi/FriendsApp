@@ -12,6 +12,7 @@ use App\Controllers\AccessController;
 use App\View;
 use App\Redirect;
 use Twig\Environment;
+use Twig\Extra\CssInliner\CssInlinerExtension;
 use Twig\Loader\FilesystemLoader;
 
 
@@ -83,6 +84,7 @@ switch ($routeInfo[0]) {
 
         $loader = new FilesystemLoader('app/Views');
         $twig = new Environment($loader);
+        $twig->addExtension(new CssInlinerExtension());
         $twig->addGlobal('session', $_SESSION);
 
         if($response instanceof View)
@@ -98,4 +100,4 @@ switch ($routeInfo[0]) {
 
         break;
 }
-
+?>

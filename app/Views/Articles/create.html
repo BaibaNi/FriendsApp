@@ -1,24 +1,30 @@
-<a href="/articles">Back</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p><a href="/articles">Back</a></p>
+
 {% if session.userid is defined %}
     <form method="post" action="/">
-        <button type="submit">Log out</button>
+        <button type="submit" class="button_box">Log out</button>
     </form>
 
     <form method="post" action="/articles">
         <div>
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title"/>
+            <input type="text" id="title" name="title" class="input_box"/>
         </div>
         <div>
             <label for="description">Description:</label>
-            <textarea id="description" name="description"></textarea>
+            <textarea id="description" name="description" class="input_box"></textarea>
         </div>
         <div>
-            <button type="submit">Create</button>
+            <button type="submit" class="button_box">Create</button>
         </div>
 
     </form>
 {% else %}
-
-    <a href="/users/login">Log in</a>
+    <p>
+        <a href="/users/login">Log in</a>
+    </p>
 {% endif %}
+
+{% endapply %}

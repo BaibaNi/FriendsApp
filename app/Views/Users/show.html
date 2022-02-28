@@ -1,14 +1,23 @@
-<a href="/users">Back</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p>
+    <a href="/users">Back to all users</a> |
+    <a href="/articles">Back to all articles</a>
+</p>
 
 {% if session.userid is defined %}
     <form method="post" action="/">
-        <button type="submit">Log out</button>
+        <button type="submit" class="button_box">Log out</button>
     </form>
 
     <h1>{{ user.name }} {{ user.surname }}</h1>
     <p>Birthday: {{ user.birthday }}</p>
     <p>Email: {{ user.email }}</p>
-    <p>
-        <small>Profile created: {{ user.createdAt|date('d-m-Y') }}</small>
-    </p>
+    <p class="small_date">Profile created: {{ user.createdAt|date('d-m-Y') }}</p>
+
+{% else %}
+    <p>You don't have access to view profiles of other users.
+        Please, <a href="/users/login">log-in</a> or <a href="/users/login">register</a>. </p>
 {% endif %}
+
+{% endapply %}

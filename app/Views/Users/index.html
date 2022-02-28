@@ -1,27 +1,31 @@
-<a href="/">Back</a>
-<a href="/articles">Back to all articles</a>
+{% apply inline_css(source("formatting.css")) %}
+
+<p>
+    <a href="/">Back</a> |
+    <a href="/articles">Back to all articles</a>
+</p>
 
 {% if session.userid is defined %}
     <form method="post" action="/">
-        <button type="submit">Log out</button>
+        <button type="submit" class="button_box">Log out</button>
     </form>
 
     <h1>All users</h1>
     <ul>
         {% for user in users %}
         <li>
-            {{ user.email }} (<a href="/users/{{ user.id }}">View profile</a>)
+            <p>{{ user.email }} (<a href="/users/{{ user.id }}">View profile</a>)</p>
         </li>
         {% endfor %}
     </ul>
 
 {% else %}
 
-    (<a href="/users/register">Register</a>)
-    (<a href="/users/login">Log in</a>)
+    <p><a href="/users/register">Register</a></p>
+    <p><a href="/users/login">Log in</a></p>
 
 {% endif %}
 
-
+{% endapply %}
 
 

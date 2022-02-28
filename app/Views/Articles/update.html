@@ -1,3 +1,5 @@
+{% apply inline_css(source("formatting.css")) %}
+
 <a href="/articles">Back</a>
 
 {% if session.userid is defined %}
@@ -20,3 +22,5 @@
     </div>
 
 </form>
+
+{% endapply %}
