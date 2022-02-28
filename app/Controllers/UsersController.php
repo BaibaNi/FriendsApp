@@ -2,74 +2,93 @@
 
 namespace App\Controllers;
 
-use Doctrine\DBAL\DriverManager;
-use App\Models\Article;
+use App\Database;
+use App\Redirect;
 use App\View;
+use App\Models\User;
+use App\Models\UserProfile;
+use Doctrine\DBAL\Exception;
 
-class UsersController
+
+class UsersController extends Database
 {
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function index(): View // RESTful API
+//---USER DISPLAY---
+    /** @throws Exception */
+    public function index(): View
     {
-        $sql = 'SELECT * FROM mini_fb.articles';
-        $stmt = $this->dbConnect()->prepare($sql);
-        $list = $stmt->executeQuery()->fetchAllAssociative();
+        $list = Database::connection()
+            ->prepare('SELECT * FROM users')
+            ->executeQuery()
+            ->fetchAllAssociative();
 
-        $articles = [];
+        $users = [];
         foreach ($list as $item){
-            $articles[] = new Article($item['title'], $item['description']);
+            $users[] = new User($item['email'], $item['password'], $item['created_at'], $item['id']);
         }
 
-        return new View('Users/index.html', [
-                'articles' => $articles
+        return new View('Users/index', [
+                'users' => $users
             ]
         );
-
     }
 
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
+    /** @throws Exception */
     public function show(array $vars): View
     {
-        $sql = 'SELECT * FROM mini_fb.articles where id = ?';
-        $stmt = $this->dbConnect()->prepare($sql);
-        $stmt->bindValue(1, $vars['id']);
-        $list = $stmt->executeQuery()->fetchAllAssociative()[0];
+        $stmt1 = Database::connection()
+            ->prepare('SELECT * FROM users where id = ?');
+        $stmt1->bindValue(1, $vars['id']);
+        $userList = $stmt1->executeQuery()->fetchAssociative();
 
-        $title = $list['title'];
-        $description = $list['description'];
 
-        $article = new Article($title, $description);
+        $stmt2 = Database::connection()
+            ->prepare('SELECT * FROM user_profiles where user_id = ?');
+        $stmt2->bindValue(1, $vars['id']);
+        $userProfile = $stmt2->executeQuery()->fetchAssociative();
 
-        return new View('Users/show.html', [
-            'id' => $vars['id'],
-            'title' => $article->getTitle(),
-            'description' => $article->getDescription()
+
+        $user = new UserProfile($userProfile['name'], $userProfile['surname'], $userProfile['birthday'],
+            $userList['email'], $userList['password'], $userList['created_at'], $userList['id']);
+
+        return new View('Users/show', [
+            'user' => $user
         ]);
     }
 
 
-    private function dbConnect()
+//---USER REGISTRATION---
+    public function getRegister(): View
     {
-        $connectionParams = [
-            'dbname' => 'mini_fb',
-            'user' => 'banibai',
-            'password' => 'Learning_mysql_074',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        ];
-
-        try {
-            return DriverManager::getConnection($connectionParams);
-        } catch (\Doctrine\DBAL\Exception $e) {
-            echo 'Error! ' . $e->getMessage() . PHP_EOL;
-            die();
-        }
+        return new View('Users/register');
     }
 
+    /** @throws Exception */
+    public function register(): Redirect
+    {
+        //todo Validate form, if fields filled etc. repeat password
+
+        Database::connection()
+            ->insert('users', [
+                'email' => $_POST['email'],
+                'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+            ]);
+
+        $res = Database::connection()
+            ->prepare('SELECT * FROM users WHERE id = LAST_INSERT_ID()')
+            ->executeQuery()
+            ->fetchAssociative();
+
+
+        Database::connection()
+            ->insert('user_profiles', [
+                'user_id' => (int)$res['id'],
+                'name' => $_POST['name'],
+                'surname' => $_POST['surname'],
+                'birthday' => $_POST['birthday'],
+            ]);
+
+        return new Redirect('/users');
+    }
 }

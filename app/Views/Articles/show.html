@@ -1,0 +1,19 @@
+<a href="/articles">Back</a>
+
+{% if session.userid is defined %}
+    <form method="post" action="/">
+        <button type="submit">Log out</button>
+    </form>
+{% endif %}
+
+<h1>{{ article.title }}</h1>
+<p>
+    <small>Written by {{ article.userId }}</small>
+</p>
+{% if session.userid is defined %}
+    (<small><a href="/articles/{{ article.id }}/edit">Edit</a></small>)
+{% endif %}
+<p>{{ article.description }}</p>
+<p>
+    <small>[{{ article.createdAt|date('d-m-Y') }}]</small>
+</p>

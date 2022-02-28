@@ -1,23 +1,28 @@
 <?php
+namespace App;
+
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 
 class Database
 {
-    public function connect()
-    {
-        $connectionParams = [
-            'dbname' => 'mini_fb',
-            'user' => 'banibai',
-            'password' => 'Learning_mysql_074',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        ];
+    private static $connection = null;
 
-        try {
-            return DriverManager::getConnection($connectionParams);
-        } catch (\Doctrine\DBAL\Exception $e) {
-            echo 'Error! ' . $e->getMessage() . PHP_EOL;
-            die();
+    /**
+     * @throws Exception
+     */
+    public static function connection()
+    {
+        if(self::$connection === null){
+            $connectionParams = [
+                'dbname' => 'mini_fb',
+                'user' => 'banibai',
+                'password' => 'Learning_mysql_074',
+                'host' => 'localhost',
+                'driver' => 'pdo_mysql'
+            ];
+            self::$connection = DriverManager::getConnection($connectionParams);
         }
+        return self::$connection;
     }
 }

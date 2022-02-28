@@ -1,0 +1,22 @@
+<a href="/articles">Back</a>
+
+{% if session.userid is defined %}
+    <form method="post" action="/">
+        <button type="submit">Log out</button>
+    </form>
+{% endif %}
+
+<form method="post" action="/articles">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" />
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea type="text" id="description" name="description"></textarea>
+    </div>
+    <div>
+        <button type="submit">Update</button>
+    </div>
+
+</form>

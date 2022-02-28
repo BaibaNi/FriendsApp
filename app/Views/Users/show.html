@@ -1,4 +1,14 @@
-Show article {{ id }}:
+<a href="/users">Back</a>
 
-"{{ title }}"
-{{ description }}
+{% if session.userid is defined %}
+    <form method="post" action="/">
+        <button type="submit">Log out</button>
+    </form>
+
+    <h1>{{ user.name }} {{ user.surname }}</h1>
+    <p>Birthday: {{ user.birthday }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>
+        <small>Profile created: {{ user.createdAt|date('d-m-Y') }}</small>
+    </p>
+{% endif %}

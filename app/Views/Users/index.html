@@ -1,7 +1,27 @@
-Show all articles:
+<a href="/">Back</a>
+<a href="/articles">Back to all articles</a>
+
+{% if session.userid is defined %}
+    <form method="post" action="/">
+        <button type="submit">Log out</button>
+    </form>
+
+    <h1>All users</h1>
+    <ul>
+        {% for user in users %}
+        <li>
+            {{ user.email }} (<a href="/users/{{ user.id }}">View profile</a>)
+        </li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+
+    (<a href="/users/register">Register</a>)
+    (<a href="/users/login">Log in</a>)
+
+{% endif %}
 
 
-{% for article in articles %}
-    <a href="articles/{{ loop.index }}">{{ article.title }}</a>
 
-{% endfor %}
+

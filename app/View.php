@@ -5,9 +5,9 @@ namespace App;
 class View
 {
     private string $path;
-    private array $variables;
+    private ?array $variables;
 
-    public function __construct(string $path, array $variables = null)
+    public function __construct(string $path, ?array $variables = [])
     {
         $this->path = $path;
         $this->variables = $variables;

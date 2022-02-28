@@ -6,12 +6,18 @@ class Article
 {
     private string $title;
     private string $description;
+    private string $createdAt;
+    private ?int $id = null;
+    private ?int $userId = null;
 
-    // kā linki, kur uzklikšķinot, ir title un description
-    public function __construct(string $title, string $description)
+
+    public function __construct(string $title, string $description, string $createdAt, ?int $id = null, ?int $userId = null)
     {
         $this->title = $title;
         $this->description = $description;
+        $this->id = $id;
+        $this->createdAt = $createdAt;
+        $this->userId = $userId;
     }
 
     public function getTitle(): string
@@ -22,5 +28,20 @@ class Article
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
     }
 }

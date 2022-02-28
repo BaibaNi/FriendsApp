@@ -1,19 +1,55 @@
 <?php
 echo '<pre>';
 
-use App\Controllers\UsersController;
-use App\View;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Doctrine\DBAL\DriverManager;
-
 require_once 'vendor/autoload.php';
 
+session_start();
+
+use App\Controllers\MainController;
+use App\Controllers\UsersController;
+use App\Controllers\ArticlesController;
+use App\Controllers\AccessController;
+use App\View;
+use App\Redirect;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/articles', [UsersController::class, 'index']);
-    $r->addRoute('GET', '/articles/{id:\d+}', [UsersController::class, 'show']); // {id} must be a number (\d+)
+//---MAIN VIEW
+    $r->addRoute('GET', '/', [MainController::class, 'index']);
+
+
+//---USERS
+    $r->addRoute('GET', '/users', [UsersController::class, 'index']);
+    $r->addRoute('GET', '/users/{id:\d+}', [UsersController::class, 'show']);
+//---register
+    $r->addRoute('POST', '/users', [UsersController::class, 'register']);
+    $r->addRoute('GET', '/users/register', [UsersController::class, 'getRegister']);
+
+
+//---LOGIN
+    $r->addRoute('GET', '/users/welcome/{id:\d+}', [AccessController::class, 'getWelcome']);
+    $r->addRoute('POST', '/users/welcome', [AccessController::class, 'login']);
+    $r->addRoute('GET', '/users/login', [AccessController::class, 'getLogin']);
+
+
+//---LOGOUT
+    $r->addRoute('POST', '/', [AccessController::class, 'logout']);
+
+
+//---ARTICLES
+    $r->addRoute('GET', '/articles', [ArticlesController::class, 'index']);
+    $r->addRoute('GET', '/articles/{id:\d+}', [ArticlesController::class, 'show']);
+//---create
+    $r->addRoute('POST', '/articles', [ArticlesController::class, 'store']);
+    $r->addRoute('GET', '/articles/create', [ArticlesController::class, 'create']);
+//---delete
+    $r->addRoute('POST', '/articles/{id:\d+}/delete', [ArticlesController::class, 'delete']);
+//---edit/update
+    $r->addRoute('POST', '/articles/{id:\d+}', [ArticlesController::class, 'update']);
+    $r->addRoute('GET', '/articles/{id:\d+}/edit', [ArticlesController::class, 'edit']);
+
 });
 
 // Fetch method and URI from somewhere
@@ -47,11 +83,19 @@ switch ($routeInfo[0]) {
 
         $loader = new FilesystemLoader('app/Views');
         $twig = new Environment($loader);
+        $twig->addGlobal('session', $_SESSION);
 
-        echo $twig->render($response->getPath(), $response->getVariables());
+        if($response instanceof View)
+        {
+            echo $twig->render($response->getPath() . '.html', $response->getVariables());
+        }
+
+        if($response instanceof Redirect)
+        {
+            header('Location: ' . $response->getLocation());
+            exit;
+        }
 
         break;
 }
-
-// ---------------------------------------------------------------------------------------------------------------------
 

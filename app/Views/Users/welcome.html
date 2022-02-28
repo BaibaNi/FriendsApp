@@ -1,0 +1,12 @@
+<a href="/">Main page</a>
+<a href="/articles">Articles</a>
+<form method="post" action="/">
+    <button type="submit">Log out</button>
+</form>
+
+<h1>WELCOME! {{ user.name }} {{ user.surname }}</h1>
+<p>Birthday: {{ user.birthday }}</p>
+<p>Email: {{ user.email }}</p>
+<p>
+    <small>Profile created: {{ user.createdAt|date('d-m-Y') }}</small>
+</p>
