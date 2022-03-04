@@ -2,38 +2,19 @@
 namespace App\Controllers;
 
 use App\Database;
-use App\Models\UserProfile;
 use App\Redirect;
 use App\View;
 use Doctrine\DBAL\Exception;
 
 class AccessController extends Database
 {
-//---LOGIN---
-
-    /**  @throws Exception */
-    public function getWelcome(array $vars): View
+//---MAIN VIEW---
+    public function index(): View
     {
-
-        $stmt1 = Database::connection()
-            ->prepare('SELECT * FROM users where id = ?');
-        $stmt1->bindValue(1, $vars['id']);
-        $userList = $stmt1->executeQuery()->fetchAssociative();
-
-        $stmt2 = Database::connection()
-            ->prepare('SELECT * FROM user_profiles where user_id = ?');
-        $stmt2->bindValue(1, $vars['id']);
-        $userProfile = $stmt2->executeQuery()->fetchAssociative();
-
-        $user = new UserProfile($userProfile['name'], $userProfile['surname'], $userProfile['birthday'],
-            $userList['email'], $userList['password'], $userList['created_at'], $userList['id']
-        );
-
-        return new View('Users/welcome', [
-            'user' => $user
-        ]);
-
+        return new View('Main/index');
     }
+
+//---LOGIN---
 
     public function getLogin(): View
     {
@@ -63,10 +44,16 @@ class AccessController extends Database
                 $hashedPassword = $user[0]['password'];
                 if(password_verify($userPassword, $hashedPassword) ){
 
-                    $status = new Redirect('/users/welcome/' . $user[0]['id']);
+                    $stmt = Database::connection()
+                        ->prepare('SELECT * FROM user_profiles WHERE user_id = ?');
+                    $stmt->bindValue(1, $user[0]["id"]);
+                    $userLogged = $stmt->executeQuery()->fetchAssociative();
 
                     session_start();
                     $_SESSION['userid'] = $user[0]["id"];
+                    $_SESSION['username'] = $userLogged["name"];
+
+                    $status = new Redirect('/');
 
                 } else{
                     //todo
@@ -81,12 +68,12 @@ class AccessController extends Database
 
     public function logout(): Redirect
     {
-    var_dump('test');
         $result = null;
         if(isset($_SESSION['userid'])){
 
-            session_destroy();
+            unset($_SESSION['username']);
             unset($_SESSION['userid']);
+            session_destroy();
 
             $result = new Redirect('/');
         }

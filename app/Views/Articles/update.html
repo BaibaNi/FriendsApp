@@ -1,4 +1,6 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
+
+{% block content %}
 
 <a href="/articles">Back</a>
 
@@ -23,4 +25,4 @@
 
 </form>
 
-{% endapply %}
+{% endblock %}

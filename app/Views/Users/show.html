@@ -1,23 +1,74 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
 
-<p>
-    <a href="/users">Back to all users</a> |
-    <a href="/articles">Back to all articles</a>
-</p>
+{% block content %}
+<div>
+    <p>
+        <a href="/users">Back</a> |
+        <a href="/articles">Articles</a> |
+        <a href="/users">All users</a>
+    </p>
+</div>
+
 
 {% if session.userid is defined %}
-    <form method="post" action="/">
-        <button type="submit" class="button_box">Log out</button>
-    </form>
+    <div>
+        <h1>{{ user.name }} {{ user.surname }}</h1>
+        <p>Birthday: {{ user.birthday }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p class="small_date">Profile created: {{ user.createdAt|date('d-m-Y') }}</p>
+    </div>
 
-    <h1>{{ user.name }} {{ user.surname }}</h1>
-    <p>Birthday: {{ user.birthday }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p class="small_date">Profile created: {{ user.createdAt|date('d-m-Y') }}</p>
 
-{% else %}
-    <p>You don't have access to view profiles of other users.
-        Please, <a href="/users/login">log-in</a> or <a href="/users/login">register</a>. </p>
-{% endif %}
+    {% if session.userid != user.id %}
+        <form method="post" action="/users/{{ user.id }}/invite">
+            <button type="submit" class="button_box">Invite user</button>
+        </form>
+        {% if acceptedByFriends|length != 0 %}
+            {% for acceptedByFriend in acceptedByFriends %}
+                {% if acceptedByFriend.friendId == user.id %}
+                    <p>You are friends.</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
 
-{% endapply %}
+
+        {% if session.userid == user.id %}
+            <div>
+            <h3>You have been invited by:</h3>
+                {% for invitedByFriend in invitedByFriends %}
+                    <div class="user_box">
+                        <p>{{ invitedByFriend.name }} {{ invitedByFriend.surname }}</p>
+                        <p class="small_date">Invitation received: {{ invitedByFriend.createdAt }}</p>
+                        <form method="post" action="/users/{{ user.id }}/accept/{{ invitedByFriend.id }}">
+                            <button type="submit" class="button_box">Accept invitation</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            <h3>Your friends:</h3>
+                <div class="three_columns">
+                    {% for acceptedByFriend in acceptedByFriends %}
+                        <div class="user_box">
+                             <p>
+                                 {{ acceptedByFriend.name }} {{ acceptedByFriend.surname }} |
+                                 <a href="/users/{{ acceptedByFriend.friendId}}">View profile</a>
+                             </p>
+                        </div>
+                    {% endfor %}
+                </div>
+        {% endif %}
+
+    {% else %}
+        <div>
+            <p>
+                You don't have access to view profiles of other users.
+                Please, <a href="/users/login">log-in</a> or <a href="/users/register">register</a>.
+            </p>
+        </div>
+    {% endif %}
+
+
+    {% endblock %}

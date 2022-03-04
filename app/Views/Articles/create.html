@@ -1,4 +1,6 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
+
+{% block content %}
 
 <p><a href="/articles">Back</a></p>
 
@@ -10,11 +12,17 @@
     <form method="post" action="/articles">
         <div>
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title" class="input_box"/>
+            <input type="text" id="title" name="title" class="input_box" value="{{ inputs.title }}"/>
+            {% if errors.title %}
+                <p class="small_error">{{ errors.title[0] }}</p>
+            {% endif %}
         </div>
         <div>
             <label for="description">Description:</label>
-            <textarea id="description" name="description" class="input_box"></textarea>
+            <textarea id="description" name="description" class="input_box">{{ inputs.description }}</textarea>
+            {% if errors.description %}
+                <p class="small_error">{{ errors.description[0] }}</p>
+            {% endif %}
         </div>
         <div>
             <button type="submit" class="button_box">Create</button>
@@ -27,4 +35,4 @@
     </p>
 {% endif %}
 
-{% endapply %}
+{% endblock %}

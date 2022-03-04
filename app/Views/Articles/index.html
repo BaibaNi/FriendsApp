@@ -1,46 +1,57 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
 
-<p><a href="/">Back</a></p>
+{% block content %}
 
-{% if session.userid is defined %}
-    <form method="post" action="/">
-        <button type="submit" class="button_box">Log out</button>
-    </form>
+{% if session.userid is not defined %}
+    <div>
+        <p>
+            <a href="/users/register">Register</a> |
+            <a href="/users/login">Log in</a> |
+            <a href="/">Back to main page</a>
+        </p>
+    </div>
+{% else %}
+    <div>
+        <p>
+            <a href="/">Back to main page</a> |
+            <a href="/users">Users and friends</a>
+        </p>
+    </div>
 {% endif %}
 
 
-<h1>All articles</h1>
+<h1>ARTICLES</h1>
 
 {% if session.userid is defined %}
     <p><a href="/articles/create">Create</a></p>
 {% endif %}
 
-
+<div class="three_columns">
 {% for article in articles %}
     {% for author in authors %}
         {% if article.userId == author.id %}
-        <ul>
-            <li>
-                <div class="one_line" style="display: inline">
-                    <p>
-                        <a href="articles/{{ article.id }}">{{ article.title }}</a>
-                    </p>
-                    <p class="written_by">
-                        Written by <a href="/users/{{ article.userId }}">{{ author.name }} {{ author.surname }}</a>
-                    </p>
-                </div>
+
+            <div class="article_box">
+                <p>
+                    <a href="articles/{{ article.id }}">{{ article.title }}</a>
+                </p>
+                <p class="written_by">
+                    Written by <a href="/users/{{ article.userId }}">{{ author.name }} {{ author.surname }}</a>
+                </p>
+                <p class="small_date">
+                    Published {{ article.createdAt|date("d-m-Y") }}
+                </p>
 
                 {% if session.userid is defined and session.userid == author.id %}
                     <form method="post" action="/articles/{{ article.id }}/delete">
                         <button type="submit" class="button_box" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
                     </form>
                 {% endif %}
+            </div>
 
-            </li>
-        </ul>
         {% endif %}
     {% endfor %}
 {% endfor %}
+</div>
 
-
-{% endapply %}
+{% endblock %}

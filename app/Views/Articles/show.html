@@ -1,22 +1,97 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
 
-<p><a href="/articles">Back</a></p>
-
-{% if session.userid is defined %}
-    <form method="post" action="/">
-        <button type="submit" class="button_box">Log out</button>
-    </form>
+{% block content %}
+{% if session.userid is not defined %}
+    <div>
+        <p>
+            <a href="/users/register">Register</a> |
+            <a href="/users/login">Log in</a> |
+            <a href="/articles">Back</a>
+        </p>
+    </div>
+    {% else %}
+    <div>
+        <p>
+            <a href="/articles">Back</a>
+        </p>
+    </div>
 {% endif %}
 
-<h1>{{ article.title }}</h1>
 
-<p class="written_by">Written by {{ author.name }} {{ author.surname}}</p>
+<div>
+    <h1>{{ article.title }}</h1>
+    <p class="written_by">Written by {{ author.name }} {{ author.surname}} | Published: {{ article.createdAt|date('d-m-Y') }}</p>
+</div>
 
 {% if session.userid is defined and session.userid == author.id %}
     <p><a href="/articles/{{ article.id }}/edit">Edit</a></p>
 {% endif %}
 
-<p>{{ article.description }}</p>
-<p class="small_date">Article created: {{ article.createdAt|date('d-m-Y') }}</p>
+<div class="description_box">
+    <p>{{ article.description }}</p>
+</div>
 
-{% endapply %}
+
+{% if session.userid is defined %}
+    <div style="margin: 3% 0 0 5%">
+        {% if userLike == 0 %}
+            <form method="post" action="/articles/{{ article.id }}/like">
+                <button type="submit" class="button_box">Like [{{ articleLikes }}]</button>
+            </form>
+        {% else %}
+            <form method="post" action="/articles/{{ article.id }}/dislike">
+                <button type="submit" class="button_box">Un-like [{{ articleLikes }}]</button>
+            </form>
+        {% endif %}
+
+
+
+        <form method="post" action="/articles/{{ article.id }}/comment">
+            <div>
+                <label for="description">Leave a comment:</label>
+                <textarea id="description" name="description" class="input_box">{{ inputs.description }}</textarea>
+
+                {% if errors.description %}
+                    <p class="small_error">{{ errors.description[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <button type="submit" class="button_box">Add comment</button>
+            </div>
+        </form>
+
+    </div>
+{% endif %}
+
+
+<div>
+
+    <h3 style="margin: 3% 0 0 5%">All comments:</h3>
+    {% if comments is not empty %}
+        {% for comment in comments %}
+
+            <div class="comments_box">
+                <p>{{ comment.comment }}</p>
+                <p class="written_by">{{ comment.name }} {{ comment.surname }} | Posted on: {{ comment.createdAt|date('d-m-Y')}}</p>
+
+                {% if session.userid == comment.userId %}
+                    <div style="display: flex">
+                        <form method="post" action="/articles/{{ article.id }}/{{ comment.id }}">
+                            <button class="button_box" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+        <div style="margin: 0 0 0 5%">
+            <p>There are no comments yet.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

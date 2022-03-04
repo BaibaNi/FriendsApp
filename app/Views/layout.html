@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% apply inline_css(source("formatting.css")) %}
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>FriendsApp</title>
+    </head>
+
+    <header id="header">
+        <h1>FRIENDS AND ARTICLES</h1>
+    </header>
+
+    <body>
+        {% if session.userid is defined %}
+            <form method="post" action="/">
+                Hello, <a href="/users/{{ session.userid }}">{{ session.username }}</a>! |
+                <button type="submit" class="button_box">Log out</button>
+            </form>
+        {% endif %}
+
+        <div id="content">{% block content %}{% endblock %}</div>
+
+        <br>
+
+        <div id="footer">
+            &copy; Copyright 2022 - FRIENDS APP.
+        </div>
+    </body>
+{% endapply %}
+</html>

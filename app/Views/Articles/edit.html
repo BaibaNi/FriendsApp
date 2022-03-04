@@ -1,11 +1,11 @@
-{% apply inline_css(source("formatting.css")) %}
+{% extends "layout.html" %}
 
-<p><a href="/articles">Back</a></p>
+{% block content %}
+<div>
+    <p><a href="/articles/{{ article.id }}">Back</a></p>
+</div>
 
 {% if session.userid is defined %}
-    <form method="post" action="/">
-        <button type="submit" class="button_box">Log out</button>
-    </form>
 
     <form method="post" action="/articles/{{ article.id }}">
         <div>
@@ -17,11 +17,11 @@
             <textarea type="text" id="description" name="description" class="input_box">{{ article.description }}</textarea>
         </div>
         <div>
-            <button type="submit" class="button_box">Edit</button>
+            <button type="submit" class="button_box">Submit changes</button>
         </div>
 
     </form>
 
 {% endif %}
 
-{% endapply %}
+{% endblock %}
