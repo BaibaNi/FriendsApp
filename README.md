@@ -5,3 +5,4 @@ Log-in and create your own articles and read articles of other users,
 Invite friends and approve those, that have invited you.
 
 - CRUD operations.
+- MVC architecture.
